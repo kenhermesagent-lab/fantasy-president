@@ -248,6 +248,42 @@ function checkDonationPaywall() {
   }
 }
 
+// ─── WALLET MODAL (Web3 Integration) ───────────────────────────────────────
+
+const WALLET_MODAL = {
+  open(amount) {
+    const modal = document.getElementById('wallet-modal');
+    const btn = document.getElementById('confirm-pay');
+    const selectedAmount = amount || 3;
+
+    // Set up price buttons
+    document.querySelectorAll('.price-btn').forEach(b => {
+      b.classList.remove('active');
+      if (parseInt(b.dataset.amount) === selectedAmount) {
+        b.classList.add('active');
+      }
+    });
+
+    modal.style.display = 'flex';
+    btn.addEventListener('click', async () => {
+      try {
+        GAME.gameState = 'wallet';
+        // Simulate Web3 wallet connection
+        GAME.walletTxId = '0x' + Math.random().toString(16).slice(2, 10);
+        document.getElementById('wallet-address').textContent = GAME.walletTxId;
+        btn.disabled = true;
+        btn.textContent = 'Processing...';
+      } catch (e) {
+        console.error('Wallet error:', e);
+      }
+    });
+  },
+  close() {
+    const modal = document.getElementById('wallet-modal');
+    modal.style.display = 'none';
+  }
+};
+
 function movePlayer(dx, dy) {
   const newX = (GAME.player.x + dx + GAME.cols) % GAME.cols;
   const newY = (GAME.player.y + dy + GAME.rows) % GAME.rows;
