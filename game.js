@@ -370,8 +370,8 @@ function update() {
 
 function checkDonationPaywall() {
   const shouldTrigger =
-    GAME.scenariosCompleted % 10 === 0 ||
-    (GAME.scenariosCompleted > 0 && GAME.scenariosCompleted % 20 === 0) ||
+    GAME.scenariosCompleted > 0 && GAME.scenariosCompleted % 10 === 0 ||
+    GAME.scenariosCompleted > 0 && GAME.scenariosCompleted % 20 === 0 ||
     GAME.flags.completed_arc >= 2 ||
     GAME.flags.dragon_slain;
 
