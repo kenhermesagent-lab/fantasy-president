@@ -307,6 +307,18 @@ const AUTO_UPDATER = {
 
 // ─── SAVE / LOAD ───────────────────────────────────────────────────────────
 
+// Clean init: ensure localStorage is clean on fresh loads
+function initSave() {
+  const saved = localStorage.getItem(GAME.saveKey);
+  if (saved) {
+    try {
+      localStorage.removeItem(GAME.saveKey);
+    } catch (e) {
+      // Storage may be full or blocked
+    }
+  }
+}
+
 function saveGame() {
   const data = {
     money: GAME.money,
@@ -325,17 +337,18 @@ function saveGame() {
 function loadSave() {
   try {
     const saved = localStorage.getItem(GAME.saveKey);
-    if (!saved) return;
-    const data = JSON.parse(saved);
-    if (data.money) GAME.money = data.money;
-    if (data.totalDonations) GAME.totalDonations = data.totalDonations;
-    if (data.chapter2Unlocked) GAME.chapter2Unlocked = data.chapter2Unlocked;
-    if (data.scenariosCompleted) GAME.scenariosCompleted = data.scenariosCompleted;
-    if (data.flags) GAME.flags = { ...GAME.flags, ...data.flags };
-    if (data.stats) GAME.stats = { ...GAME.stats, ...data.stats };
-    if (data.player) GAME.player = { ...GAME.player, ...data.player };
-    if (data.scenarioQueue) GAME.scenarioQueue = data.scenarioQueue;
-    if (data.lastStateHash) GAME.flags.last_state_hash = data.last_state_hash;
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.money) GAME.money = data.money;
+      if (data.totalDonations) GAME.totalDonations = data.totalDonations;
+      if (data.chapter2Unlocked) GAME.chapter2Unlocked = data.chapter2Unlocked;
+      if (data.scenariosCompleted) GAME.scenariosCompleted = data.scenariosCompleted;
+      if (data.flags) GAME.flags = { ...GAME.flags, ...data.flags };
+      if (data.stats) GAME.stats = { ...GAME.stats, ...data.stats };
+      if (data.player) GAME.player = { ...GAME.player, ...data.player };
+      if (data.scenarioQueue) GAME.scenarioQueue = data.scenarioQueue;
+      if (data.lastStateHash) GAME.flags.last_state_hash = data.last_state_hash;
+    }
   } catch (e) {}
 }
 
@@ -369,11 +382,9 @@ function update() {
 }
 
 function checkDonationPaywall() {
-  const shouldTrigger =
-    GAME.scenariosCompleted > 0 && GAME.scenariosCompleted % 10 === 0 ||
-    GAME.scenariosCompleted > 0 && GAME.scenariosCompleted % 20 === 0 ||
-    GAME.flags.completed_arc >= 2 ||
-    GAME.flags.dragon_slain;
+  // Explicit threshold: trigger ONLY when scenariosCompleted === 10
+  // Never on 0 or on threshold boundaries (1, 2, ..., 9)
+  const shouldTrigger = GAME.scenariosCompleted === 10;
 
   if (shouldTrigger && !GAME.flags.chapter2Unlocked) {
     setTimeout(() => {
@@ -473,7 +484,7 @@ function drawUI() {
   ctx.fillText('Chapter 1', 20, 55);
   ctx.fillText('Money: $' + GAME.money, 20, 75);
 
-  if (GAME.scenariosCompleted > 0 && GAME.scenariosCompleted % 10 === 0) {
+  if (GAME.scenariosCompleted === 10) {
     ctx.fillStyle = 'rgba(255, 200, 0, 0.3)';
     ctx.fillRect(10, 140, 200, 30);
     ctx.fillStyle = '#ff0';
@@ -668,6 +679,7 @@ function main() {
 
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
+    initSave(); // Clean localStorage before loading
     GAME.gameState = 'playing';
     startTitle();
     main();
