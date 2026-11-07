@@ -331,20 +331,44 @@ function drawUI() {
   const offsetX = canvas.style.transform ? parseFloat(canvas.style.transform.replace('px, 0px, 0px)', '')) : 0;
   const offsetY = 0;
 
+  // ─── HUD BACKGROUND ────────────────────────────────────────────────────────
   ctx.fillStyle = 'rgba(0,0,0,0.5)';
   ctx.fillRect(10, 10, 200, 50);
   ctx.fillStyle = '#ddd';
   ctx.font = '14px "Courier New", monospace';
-  ctx.fillText('HP: ' + GAME.player.hp + '%', 20, 35);
-  ctx.fillText('Chapter 1', 20, 55);
-  ctx.fillText('Money: $' + GAME.money, 20, 75);
 
+  // ─── STAT METERS (Treasury, Military, Approval, Arcane Favor) ─────────────
+  const statY = 35;
+  const statHeight = 16;
+  const statWidth = 180;
+  const statBarWidth = 140;
+  const stats = [
+    { label: 'TREASURY: $', key: 'treasury', y: statY },
+    { label: 'MILITARY: ', key: 'military', y: statY + 22 },
+    { label: 'APPROVAL: ', key: 'approval', y: statY + 44 },
+    { label: 'ARCANE: ', key: 'arcane_favor', y: statY + 66 }
+  ];
+  for (const s of stats) {
+    const val = Math.max(0, Math.min(100, GAME.stats[s.key]));
+    const fill = val >= 70 ? '#0f0' : val >= 40 ? '#ff0' : '#f00';
+    ctx.fillStyle = fill;
+    ctx.fillRect(10, s.y, statBarWidth, statHeight);
+    ctx.fillStyle = '#fff';
+    ctx.font = '12px "Courier New", monospace';
+    ctx.fillText(s.label + val + '%', 12, s.y + 14);
+  }
+
+  ctx.fillText('HP: ' + GAME.player.hp + '%', 12, 35 + 88);
+  ctx.fillText('Chapter 1', 12, 35 + 110);
+  ctx.fillText('Money: $' + GAME.money, 12, 35 + 132);
+
+  // ─── DONATION GATE (scenariosCompleted === 10) ─────────────────────────────
   if (GAME.scenariosCompleted === 10) {
     ctx.fillStyle = 'rgba(255, 200, 0, 0.3)';
-    ctx.fillRect(10, 140, 200, 30);
+    ctx.fillRect(10, 35 + 154, 200, 30);
     ctx.fillStyle = '#ff0';
     ctx.font = '14px "Courier New", monospace';
-    ctx.fillText('DONATION GATE: Show support', 20, 155);
+    ctx.fillText('DONATION GATE: Show support', 20, 35 + 170);
   }
 }
 
