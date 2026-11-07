@@ -61,6 +61,8 @@ const SCENARIOS_DATA = [
 // ─── GLOBAL STATE ───────────────────────────────────────────────────────────
 
 const GAME = {
+  width: 960,
+  height: 640,
   flags: { elven_alliance:false, dragon_slain:false, dark_cult_tier:0, treasury:50, military:50, approval:50, arcane_favor:50, world_state:'prelude', choice_sensitivity:0, completed_arc:0, donations_received:0, scenarios_completed:0, chapter2_unlocked:false, game_over_state:null, victory_achieved:false, gate_states:{elven_gate:false, dragon_gate:false, dark_cult_gate:false} },
   stats: { treasury:50, military:50, approval:50, arcane_favor:50 },
   scenarios: SCENARIOS_DATA,
@@ -556,8 +558,8 @@ function showChapterComplete() {
 function startTitle() {
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
-  const w = GAME.width;
-  const h = GAME.height;
+  const w = canvas.width;
+  const h = canvas.height;
 
   ctx.fillStyle = '#1a1a2e';
   ctx.fillRect(0, 0, w, h);
