@@ -3,27 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EnvSync Adventure — Chapter 1</title>
+  <title>Fantasy President — Chapter 1</title>
   <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Fantasy President - Web3 narrative adventure game with crypto monetization">
 </head>
 <body>
   <div id="game-container">
     <canvas id="game" width="960" height="640"></canvas>
     <div id="hud">
       <div id="hud-top">
+        <div id="menu-title">Fantasy President</div>
+        <div id="menu-subtitle">Chapter 1: The Rising Crisis</div>
         <div class="hud-item">Chapter 1</div>
         <div class="hud-item">Items: <span id="inventory-count">0</span></div>
         <div class="hud-item">Money: <span id="money">0</span></div>
       </div>
     </div>
-    <div id="dialogue-box">
+    <div id="dialogue-box" style="display:none;">
       <div id="dialogue-text"></div>
       <div id="dialogue-options"></div>
     </div>
     <div id="wallet-modal" class="modal hidden">
       <div class="modal-content">
         <h2>Chapter 2 Access</h2>
-        <p>Unlock the next chapter in the EnvSync story. Your contribution helps fund <br>developer tools that keep secrets safe.</p>
+        <p style="color:#888;">Unlock the next chapter. Your contribution funds ongoing development.</p>
         <div class="price-options">
           <button class="price-btn" data-amount="1">$1 (Stretch)</button>
           <button class="price-btn" data-amount="3">$3 (Supporter Badge)</button>
